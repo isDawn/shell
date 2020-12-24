@@ -66,6 +66,15 @@ install() {
     echo -e "\033[32m create success \033[0m" 
 }
 
+update() {
+    branch=$1
+    if [[ $branch = '' ]]
+    then
+        branch='master'
+    fi
+    cd ~/.connectServer && git pull -p && git checkout ${branch} && git pull -p && cd -
+}
+
 login() {
     echo USER_NAME
     if [ ! $USER_NAME ];then
