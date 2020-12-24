@@ -2,7 +2,7 @@
 
 BKIT_PATH=/Users/$(whoami)/.connectServer
 
-source "./config.sh"
+source "$BKIT_PATH/config.sh"
 
 parseParams() {
     if [ $# -lt 1 ]; then
