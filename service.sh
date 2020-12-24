@@ -2,7 +2,9 @@
 
 BKIT_PATH=/Users/$(whoami)/.connectServer
 
-source "$BKIT_PATH/config.sh"
+configAddr="$BKIT_PATH/config.sh"
+
+source configAddr
 
 parseParams() {
     if [ $# -lt 1 ]; then
@@ -11,11 +13,11 @@ parseParams() {
         case $1 in
             -user)
                 echo "setUserName ===>$2"
-                sed -i '' "s/USER_NAME='$USER_NAME'/USER_NAME='$2'/g" config.sh
+                sed -i '' "s/USER_NAME='$USER_NAME'/USER_NAME='$2'/g" $configAddr
                 exit;;
             -pwd)
                 echo "setPassWord ===>$2"
-                sed -i '' "s/USER_PASSWORD='$USER_PASSWORD'/USER_PASSWORD='$2'/g" config.sh
+                sed -i '' "s/USER_PASSWORD='$USER_PASSWORD'/USER_PASSWORD='$2'/g" $configAddr
                 exit;;
             -v | -version)
                 echo $USER_NAME
