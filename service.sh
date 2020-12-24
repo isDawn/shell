@@ -53,6 +53,8 @@ install() {
         rm -rf $targetPath
     fi
 
+    echo -e "\033[32m 请输入您的本机电脑密码进行安装 \033[0m"
+
     # 创建软连接
     sudo ln -s $sourcePath $targetPath
     if [ ! -L $targetPath ]; then

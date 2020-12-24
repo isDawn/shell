@@ -26,7 +26,7 @@ main () {
   }
 
   #----------------------------------------------
-  # 下载 BKIT 代码
+  # 下载代码
   #----------------------------------------------
   env git clone https://github.com/isDawn/shell.git ${connectServer} || {
       echo -e "\033[31m 错误: 克隆 BundleKit 仓库失败 \033[0m"
