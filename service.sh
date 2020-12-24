@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source ./config.sh
+BKIT_PATH=/Users/$(whoami)/.connectServer
+
+source "./config.sh"
 
 parseParams() {
     if [ $# -lt 1 ]; then
@@ -28,11 +30,36 @@ parseParams() {
             -h | -help )
                 echo '帮忙功能暂未开放'
                 ;;
+            -g | -global )
+                install
+                ;;
             * )
                 echo '请输入正确的指令'
                 exit;;
         esac
     fi
+}
+
+install() {
+
+    absDirPath=$(cd `dirname $0`; pwd);
+
+    sourcePath="$absDirPath/service.sh"
+
+    targetPath="/usr/local/bin/connectServer"
+
+    # # # 判断符号链接是否存在
+    if [ -L $targetPath ]; then
+        rm -rf $targetPath
+    fi
+
+    # 创建软连接
+    sudo ln -s $sourcePath $targetPath
+    if [ ! -L $targetPath ]; then
+        echo -e "\033[31m created symbolic link failed! \033[0m"
+        return 0
+    fi
+    echo -e "\033[32m create success \033[0m" 
 }
 
 login() {
