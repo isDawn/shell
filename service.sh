@@ -24,7 +24,7 @@ parseParams() {
                 echo "connectService version: $VERSION"
                 exit;;
             -u | -update)
-                echo '已经是最新版本啦'
+                update
                 exit;;
             -l | -login )
                 login
