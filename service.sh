@@ -4,7 +4,7 @@ BKIT_PATH=/Users/$(whoami)/.connectServer
 
 configAddr="$BKIT_PATH/config.sh"
 
-source configAddr
+source $configAddr
 
 parseParams() {
     if [ $# -lt 1 ]; then
