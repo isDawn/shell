@@ -30,7 +30,7 @@ parseParams() {
                 login
                 ;;
             -h | -help )
-                echo '帮忙功能暂未开放'
+                vhelp
                 ;;
             -g | -global )
                 install
@@ -66,6 +66,15 @@ install() {
     echo -e "\033[32m create success \033[0m" 
 }
 
+vhelp() {
+    echo -e "\033[32m $ connectServer -user \033[0m"
+    echo -e "\033[32m $ connectServer -pwd \033[0m"
+    echo -e "\033[32m $ connectServer -v | -version \033[0m"
+    echo -e "\033[32m $ connectServer -u | -update \033[0m"
+    echo -e "\033[32m $ connectServer -l | login \033[0m"
+    echo -e "\033[32m $ connectServer -h | help \033[0m"
+}
+
 update() {
     branch=$1
     if [[ $branch = '' ]]
@@ -76,7 +85,7 @@ update() {
 }
 
 login() {
-    echo USER_NAME
+    
     if [ ! $USER_NAME ];then
         echo -e "\033[31m 请先设置用户名称 $ connectServer -user XXX \033[0m"  
         exit
