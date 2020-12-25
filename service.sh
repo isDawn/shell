@@ -2,7 +2,7 @@
 
 BKIT_PATH=/Users/$(whoami)/.connectServer
 
-configAddr="$BKIT_PATH/config.sh"
+configAddr="$BKIT_PATH/./config.sh"
 
 source $configAddr
 
@@ -13,11 +13,11 @@ parseParams() {
         case $1 in
             -user)
                 echo "setUserName ===>$2"
-                sed -i '' "s/USER_NAME='$USER_NAME'/USER_NAME='$2'/g" $configAddr
+                setUserName $2
                 exit;;
             -pwd)
                 echo "setPassWord ===>$2"
-                sed -i '' "s/USER_PASSWORD='$USER_PASSWORD'/USER_PASSWORD='$2'/g" $configAddr
+                setPassWord $2
                 exit;;
             -v | -version)
                 echo $USER_NAME
@@ -40,6 +40,15 @@ parseParams() {
                 exit;;
         esac
     fi
+}
+
+setUserName() {
+    echo $1
+    sed -i '' "s/USER_NAME='$USER_NAME'/USER_NAME='$1'/g" $configAddr
+}
+
+setPassWord() {
+    sed -i '' "s/USER_PASSWORD='$USER_PASSWORD'/USER_PASSWORD='$1'/g" $configAddr
 }
 
 install() {
@@ -85,15 +94,26 @@ update() {
 }
 
 login() {
+
+    isSetStatus=''
     
     if [ ! $USER_NAME ];then
-        echo -e "\033[31m 请先设置用户名称 $ connectServer -user XXX \033[0m"  
-        exit
+        read -p "请先设置用户名称:" user_name
+        if [ ! ${user_name} ];then
+            echo -e "\033[31m 请先设置用户名称 $ connectServer -user XXX \033[0m"  
+            exit
+        fi
+        setUserName $user_name
+
     fi
 
     if [ ! $USER_PASSWORD ];then
-        echo -e "\033[31m 请先设置用户密码 $ connectServer -pwd ****** \033[0m"
-        exit
+        read -p "请先设置密码:" pass_word
+        if [ ! $pass_word ];then
+            echo -e "\033[31m 请先设置用户密码 $ connectServer -pwd ****** \033[0m"
+            exit
+        fi
+        setPassWord $pass_word
     fi
 
     echo -e "\033[32m -------------------------------------- \033[0m" 
@@ -112,9 +132,17 @@ login() {
     echo " >>> (2) 47.107.105.88 (public)"
     echo " >>> (3) exit"
     echo -e "\033[32m -------------------------------------- \033[0m" 
-    read -p "请选择服务器:" input
+    read -p  "请选择服务器:" input
 
     ssh=''
+
+    if [ $user_name ];then
+        USER_NAME=$user_name
+    fi
+
+    if [ $pass_word ];then
+        USER_PASSWORD=$pass_word
+    fi
 
     case ${input} in
         1)
