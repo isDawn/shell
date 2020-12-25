@@ -12,16 +12,13 @@ parseParams() {
     else
         case $1 in
             -user)
-                echo "setUserName ===>$2"
                 setUserName $2
                 exit;;
             -pwd)
-                echo "setPassWord ===>$2"
                 setPassWord $2
                 exit;;
             -v | -version)
-                echo $USER_NAME
-                echo "connectService version: $VERSION"
+                echo -e "\033[32m connectService version: $VERSION \033[0m"
                 exit;;
             -u | -update)
                 update
@@ -49,12 +46,13 @@ parseParams() {
 }
 
 setUserName() {
-    echo $1
     sed -i '' "s/USER_NAME='$USER_NAME'/USER_NAME='$1'/g" $configAddr
+    echo -e "\033[32m Set username success \033[0m"
 }
 
 setPassWord() {
     sed -i '' "s/USER_PASSWORD='$USER_PASSWORD'/USER_PASSWORD='$1'/g" $configAddr
+    echo -e "\033[32m Set password success \033[0m"
 }
 
 install() {
