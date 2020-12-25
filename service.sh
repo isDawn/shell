@@ -88,6 +88,8 @@ vhelp() {
     echo -e "\033[32m $ connectServer -u | -update \033[0m"
     echo -e "\033[32m $ connectServer -l | login \033[0m"
     echo -e "\033[32m $ connectServer -h | help \033[0m"
+    echo -e "\033[32m $ connectServer -catPwd \033[0m"
+    echo -e "\033[32m $ connectServer -catUser \033[0m"
 }
 
 update() {
