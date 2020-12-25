@@ -35,6 +35,12 @@ parseParams() {
             -g | -global )
                 install
                 ;;
+            -catPwd )
+                echo -e "\033[32m pass_word is : $USER_PASSWORD \033[0m" 
+                exit;;
+            -catUser )
+                echo -e "\033[32m user_name is : $USER_NAME \033[0m" 
+                exit;;
             * )
                 echo '请输入正确的指令'
                 exit;;
