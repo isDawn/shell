@@ -1,10 +1,24 @@
 #!/bin/bash
 
-BKIT_PATH=/Users/$(whoami)/.connectServer
+SERVICE_PATH=/Users/$(whoami)/.connectServer
 
-configAddr="$BKIT_PATH/./config.sh"
+configAddr="$SERVICE_PATH/./config.sh"
 
 source $configAddr
+
+encryption() {
+    echo "$1" |base64
+}
+
+decrypt() {
+    echo "$1" |base64 -D
+}
+
+# 用户输入使用解密后的密码
+_USER_PASSWORD=$(decrypt $USER_PASSWORD)
+
+# 解密后的用户名
+_USER_NAME=$(decrypt $USER_NAME)
 
 parseParams() {
     if [ $# -lt 1 ]; then
@@ -33,10 +47,10 @@ parseParams() {
                 install
                 ;;
             -catPwd )
-                echo -e "\033[32m pass_word is : $USER_PASSWORD \033[0m" 
+                echo -e "\033[32m pass_word is : $_USER_PASSWORD \033[0m" 
                 exit;;
             -catUser )
-                echo -e "\033[32m user_name is : $USER_NAME \033[0m" 
+                echo -e "\033[32m user_name is : $_USER_NAME \033[0m" 
                 exit;;
             * )
                 echo '请输入正确的指令'
@@ -46,12 +60,15 @@ parseParams() {
 }
 
 setUserName() {
-    sed -i '' "s/USER_NAME='$USER_NAME'/USER_NAME='$1'/g" $configAddr
+    _user=$(encryption $1)
+    sed -i '' "s/USER_NAME='$USER_NAME'/USER_NAME='$_user'/g" $configAddr
     echo -e "\033[32m Set username success \033[0m"
 }
 
 setPassWord() {
-    sed -i '' "s/USER_PASSWORD='$USER_PASSWORD'/USER_PASSWORD='$1'/g" $configAddr
+    _pwd=$(encryption $1)
+    echo $_pwd
+    sed -i '' "s/USER_PASSWORD='$USER_PASSWORD'/USER_PASSWORD='$_pwd'/g" $configAddr
     echo -e "\033[32m Set password success \033[0m"
 }
 
@@ -79,6 +96,7 @@ install() {
     echo -e "\033[32m create success \033[0m" 
 }
 
+
 vhelp() {
     echo -e "\033[32m $ connectServer -user \033[0m"
     echo -e "\033[32m $ connectServer -pwd \033[0m"
@@ -103,7 +121,7 @@ login() {
 
     isSetStatus=''
     
-    if [ ! $USER_NAME ];then
+    if [ ! $_USER_NAME ];then
         read -p "请先设置用户名称:" user_name
         if [ ! ${user_name} ];then
             echo -e "\033[31m 请先设置用户名称 $ connectServer -user XXX \033[0m"  
@@ -113,8 +131,8 @@ login() {
 
     fi
 
-    if [ ! $USER_PASSWORD ];then
-        read -p "请先设置密码:" pass_word
+    if [ ! $_USER_PASSWORD ];then
+        read -p "请先设置密码:" -s pass_word
         if [ ! $pass_word ];then
             echo -e "\033[31m 请先设置用户密码 $ connectServer -pwd ****** \033[0m"
             exit
@@ -143,21 +161,21 @@ login() {
     ssh=''
 
     if [ $user_name ];then
-        USER_NAME=$user_name
+        _USER_NAME=$user_name
     fi
 
     if [ $pass_word ];then
-        USER_PASSWORD=$pass_word
+        _USER_PASSWORD=$pass_word
     fi
 
     case ${input} in
         1)
         echo -e "\033[35m 「daily登录」 \033[0m" 
-        ssh="ssh $USER_NAME@120.78.154.36 -p 60022"
+        ssh="ssh $_USER_NAME@120.78.154.36 -p 60022"
             sleep 1;;
         2)
         echo -e "\033[35m 「public登录」 \033[0m" 
-        ssh="ssh $USER_NAME@47.107.105.88 -p 60022"
+        ssh="ssh $_USER_NAME@47.107.105.88 -p 60022"
         sleep 1;;
         3)
         exit;;
@@ -166,9 +184,9 @@ login() {
     expect -c "
     spawn $ssh;
     sleep 1;
-    send "$USER_PASSWORD\r"  
+    send "$_USER_PASSWORD\r"  
     expect {
-        *password:* { send \"$USER_PASSWORD\r\" }  
+        *password:* { send \"$_USER_PASSWORD\r\" }  
     }
     interact
     "
